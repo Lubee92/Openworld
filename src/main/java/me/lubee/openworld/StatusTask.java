@@ -27,6 +27,14 @@ public class StatusTask extends BukkitRunnable {
 			
 			if (data == null) continue;
 			
+			int miningLevel = data.getMiningLevel();
+			if (miningLevel >= 5) {
+				int hasteLevel = (miningLevel / 5) - 1;
+				if (player.getInventory().getItemInMainHand().getType().name().contains("PICKAXE")) {
+					player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 40, hasteLevel, false, false));
+				}
+			}
+			
 			data.addThirst(-0.05);
 			
 			if (data.getThirst() <= 0) {
@@ -53,7 +61,8 @@ public class StatusTask extends BukkitRunnable {
 				}
 			}
 			
-			String message = String.format("Thirst : %d%%, Stamina : %d%%, Infection : %d%%", 
+			String message = String.format("Mana : %d%%, Thirst : %d%%, Stamina : %d%%, Infection : %d%%",
+					(int) data.getMana(),
 					(int) data.getThirst(),
 					(int) data.getStamina(),
 					(int) data.getInfection());

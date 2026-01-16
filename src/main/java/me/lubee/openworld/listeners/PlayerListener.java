@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -87,6 +88,25 @@ public class PlayerListener implements Listener {
 			if (data != null && data.getInfection() > 0) {
 				event.setCancelled(true);
 				data.addInfection(-30.0);
+				item.setAmount(item.getAmount() - 1);
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onUseManaPotion(PlayerInteractEvent event) {
+		ItemStack item = event.getItem();
+		String itemId = getItemId(item);
+		
+		if ("mana_potion".equals(itemId)) {
+			if (!event.getAction().name().contains("RIGHT_CLICK")) return;
+			
+			Player player = event.getPlayer();
+			PlayerData data = playerManager.getPlayerData(player.getUniqueId());
+			
+			if (data != null && data.getMana() < 100) {
+				event.setCancelled(true);
+				data.addMana(30.0);
 				item.setAmount(item.getAmount() - 1);
 			}
 		}
